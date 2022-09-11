@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<table class="table table-hover table-responsive">
+  <caption><h1>设计</h1></caption>
+  <thead>
+  <tr>
+    <th>设计名称</th>
+    <th>销量</th>
+  </tr>
+  </thead>
+  <tbody>
+  <% @designs.each do |design| %>
+    <tr>
+      <td><%= design.design_name %></td>
+      <td><%= design.sales %></td>
+      <td><%= link_to '修改', edit_design_path(design) %></td>
+      <td><%= link_to '删除设计', design, method: :delete, data: { confirm: "确认删除此设计吗？" } %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+
+
+<%= link_to '新增设计', new_design_path %>

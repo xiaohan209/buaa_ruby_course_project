@@ -1,0 +1,43 @@
+<%= form_with(model: color, local: true) do |form| %>
+  <% if color.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(color.errors.count, "error") %> prohibited this color from being saved:</h2>
+      <ul>
+      <% color.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label "颜色" %>
+    <%= form.text_field :rgb  ,:class => "form-control",:id => "color",:placeholder=>"#000000"%>
+  </div>
+
+  <div class="field">
+    <%= form.label "描述"%>
+    <%= form.text_field :description,:class => "form-control"%>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "创建/修改颜色",:class => "btn btn-default",:id => "a"%>
+  </div>
+<% end %>
+
+<script>
+    $(function() {
+        $('#color').colorpicker({
+            allowEmpty:true,//允许为空,显示清楚颜色按钮
+            color: "#ffffff",//初始化颜色
+            showInput: true,//显示输入
+            containerClassName: "full-spectrum",
+            showInitial: true,//显示初始颜色,提供现在选择的颜色和初始颜色对比
+            showPalette: true,//显示选择器面板
+            showSelectionPalette: true,//记住选择过的颜色
+            showAlpha: true,//显示透明度选择
+            preferredFormat: "rgb",//输入框颜色格式,(hex十六进制,hex3十六进制可以的话只显示3位,hsl,rgb三原
+
+        });
+    });
+</script>

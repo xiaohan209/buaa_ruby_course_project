@@ -1,0 +1,25 @@
+test:
+  stage: test
+  script:
+    - cd project
+    - bundle install
+    - rails db:migrate RAILS_ENV=test
+  #  - rails test
+  only:
+    - project
+
+deploy:
+  stage: deploy
+  script:
+    - sudo apt-get install -y rsync
+    - puma-stop 5000
+    - rsync -arv --delete ./project ~
+    - cd ~/project
+    - bundle install
+    - rails db:migrate
+    - rails db:seed
+    - nohup rails server -d -b 0.0.0.0 -p 5000 &
+  only:
+    - project
+
+

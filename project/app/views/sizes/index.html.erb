@@ -1,0 +1,28 @@
+<p id="notice"><%= notice %></p>
+
+
+
+<table class="table table-hover table-responsive">
+  <caption><h1>尺寸</h1></caption>
+  <thead>
+  <tr>
+    <th>尺寸名称</th>
+    <th>描述</th>
+  </tr>
+  </thead>
+  <tbody>
+    <% @sizes.each do |size| %>
+      <tr>
+        <td><%= size.size_name %></td>
+        <td><%= size.description %></td>
+        <td><%= link_to '修改', edit_size_path(size) %></td>
+        <td><%= link_to '删除尺寸类别', size, method: :delete, data: { confirm: "确认删除尺寸吗？" } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+
+<%= link_to '新增尺寸', new_size_path %>

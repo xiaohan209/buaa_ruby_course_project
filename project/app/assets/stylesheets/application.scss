@@ -1,0 +1,107 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= require_tree .
+ *= require_self
+ */
+
+@import "bootstrap-sprockets";
+@import "bootstrap";
+
+
+body {
+  .yield_div {
+    margin-bottom: 60px
+  }
+}
+
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+.clearfix {
+  zoom: 1;
+}
+
+
+.product-preview-img {
+  width: 19vw;
+  min-width: 290px;
+}
+
+.flow-box-item {
+  width: 19vw;
+  min-width: 300px;
+
+  .product_price {
+    float: right;
+  }
+  .product_name {
+    float: left;
+  }
+
+  .detail-block {
+    margin-right: -13px;
+    margin-bottom: -13px;
+    .btn-in-preview-card {
+      border-top-left-radius: 50rem;
+    }
+    float: bottom;
+  }
+}
+
+
+.cart-item-right-text {
+  float: right;
+}
+
+.product-detail-img {
+  width: 25vw;
+}
+
+.product_img_show {
+  width: 25vw;
+}
+
+.product_show{
+  margin-left: 25px;
+  margin-right:25px;
+}
+
+.color-block {
+  border-style: solid;
+  border-top-width: 2px;
+  border-right-width: 2px;
+  border-bottom-width: 2px;
+  border-left-width: 2px;
+  border-color: #000000;
+}
+
+.cart_item_img_show {
+  width: 30vw;
+  border-style: solid;
+  border-top-width: 5px;
+  border-right-width: 5px;
+  border-bottom-width: 5px;
+  border-left-width: 5px;
+  border-color: #000000;
+}
+
+#accordion {
+  margin-left: 25px;
+  margin-right: 25px;
+}

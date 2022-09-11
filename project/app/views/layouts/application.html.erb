@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WOSABI的小黑店</title>
+  <%= csrf_meta_tags %>
+  <%= csp_meta_tag %>
+  <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
+  <script src="https://cdn.bootcss.com/bootstrap-colorpicker/3.0.0-beta.1/js/bootstrap-colorpicker.min.js"></script>
+  <link href="https://cdn.bootcss.com/bootstrap-colorpicker/3.0.0-beta.1/css/bootstrap-colorpicker.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div id="navbar-main">
+  <!-- Fixed navbar -->
+  <div class="navbar navbar-inverse nav-justified">
+    <div class="container">
+      <div class="navbar-header">
+        <a class="navbar-brand hidden-xs hidden-sm" href=<%= products_url %>>
+              <span class="icon icon-shield" style="font-size:32px; color:#3498db">
+                <div id="banner">
+                    <img src="/assets/logo.png" width="32px">
+                    WOSABI的商店
+                </div>
+              </span>
+        </a>
+      </div>
+
+      <div class="navbar-collapse collapse">
+        <ul class="nav navbar-nav">
+          <li><a href=<%= products_path %>>首页</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">商品分类
+              <span class="caret"></span></a>
+            <ul class="dropdown-menu">
+              <% @product_types = ProductType.all %>
+              <% @product_types.each do |product_type| %>
+                <li><a class="dropdown-item" href="#"><%= product_type.product_type_name %></a></li>
+              <% end %>
+            </ul>
+          </li>
+          <% unless current_user && current_user.user_role > 0 %>
+            <li><a href="<%= transaction_orders_path %>">查看所有订单</a></li>
+          <% end %>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+          <% if current_user %>
+            <li><a>
+              <%= current_user.user_name %> 已登入,身份为
+              <% if current_user.user_role > 0 %>
+                <b>管理员</b>
+              <% else %>
+                <b>顾客</b>
+              <% end %>
+            </a></li>
+            <li><%= link_to('退出', destroy_user_session_path, :method => :delete) %> </li>
+            <li><%= link_to('修改信息', edit_registration_path(:user)) %> </li>
+            <% if current_user.user_role > 0 %>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">编辑商品选项
+                  <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="<%= new_product_path %>">新增商品</a></li>
+                  <li><a href="<%= designs_path %>">编辑所有设计</a></li>
+                  <li><a href="<%= product_types_path %>">编辑所有类别</a></li>
+                  <li><a href="<%= sizes_path %>">编辑所有大小型号</a></li>
+                  <li><a href="<%= colors_path %>">编辑所有颜色</a></li>
+                </ul>
+              </li>
+              <li><a href="<%= transaction_orders_path %>">查看所有订单</a></li>
+            <% else %>
+              <li><a href="<%= cart_items_path %>"><img src="/assets/cart.png" width="32px"> </a></li>
+              <li>
+                <%= link_to :action => "index", :controller => "/favorites" do %>
+                  <img src="/assets/heart-full.png" width="32px">
+                <% end %>
+              </li>
+            <% end %>
+          <% else %>
+            <li><%= link_to('登录', new_session_path(:user)) %></li>
+            <li><%= link_to('注册', new_registration_path(:user)) %> </li>
+            <li><%= link_to '游客身份进店逛逛', products_path %></li>
+          <% end %>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="yield_div">
+  <%= yield %>
+</div>
+<div class="navbar navbar-inverse navbar-fixed-bottom nav-justified">
+      <span class="icon icon-shield" style="font-size:26px; color:#3498db">
+        <p align="center">Ruby-Project-Demo Copyright xiaohan209 &copy; 2021.1.15</p>
+        <p align="center">联系方式:714843271</p>
+      </span>
+</div>
+</body>
+</html>

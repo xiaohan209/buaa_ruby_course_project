@@ -1,0 +1,144 @@
+<p id="notice"><%= notice %></p>
+
+
+<div id="accordion">
+  <% sum_price = 0 %>
+  <% sum_count = 0 %>
+
+  <table class="table table-hover table-responsive">
+    <caption><h1>购物车</h1></caption>
+    <thead>
+    <tr>
+      <th>商品名称</th>
+      <th>图片</th>
+      <th>商品说明</th>
+      <th>单价</th>
+      <th>数量</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @cart_items.each do |cart_item| %>
+      <% if cart_item.user_id == current_user.id %>
+        <% product = Product.find(cart_item.product_id) %>
+        <tr>
+          <td>
+            <%= product.product_name %>
+          </td>
+          <td>
+            <a href= <%= product_path(product) %>>
+              <img class="cart_item_img_show" alt="Card image" src=<%= product.image_directory %>>
+            </a>
+          </td>
+          <td><%= product.description %></td>
+          <td>￥<%= product.retail_price %></td>
+          <td>
+            <div class="row">
+              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                <%= button_to "-", :action => 'decrease_cart_item_count', :id => cart_item.id, :number => 1 %>
+              </div>
+              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                <%= cart_item.quantity %>
+              </div>
+              <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
+                <%= button_to "+", :action => 'increase_cart_item_count', :id => cart_item.id, :number => 1 %>
+              </div>
+            </div>
+          </td>
+
+        </tr>
+        <% count = cart_item.quantity.nil? ? 0 : cart_item.quantity %>
+        <% sum_price += count * product.retail_price %>
+        <% sum_count += count %>
+      <% end %>
+    <% end %>
+    </tbody>
+  </table>
+
+  <% if sum_count > 0 %>
+    <div align="right" class="row-sm-12 row-md-6 row-lg-4">
+      <p>
+        目前总价:<%= sum_price %><img src="/assets/money.png" width="32px">
+        商品总数:<span><%=sum_count %></span>
+      </p>
+
+      <button type="button" class="btn btn-primary btn-lg add-to-cart-btn" data-toggle="modal" data-target="#myModal">
+        去结算
+      </button>
+    </div>
+
+  <% else %>
+    <div>
+      当前您的购物车还空空的呢！真棒👍！
+    </div>
+  <% end %>
+</div>
+
+
+<!--cart_item-->
+<% if current_user && current_user.user_role == 0 %>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <% @transaction_order = TransactionOrder.new %>
+      <%= form_with(model: @transaction_order, local: true, id: "order-form") do |form| %>
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">加入购物车</h4>
+          </div>
+
+          <div class="modal-body">
+            <% if @transaction_order.errors.any? %>
+              <div id="error_explanation">
+                <h2><%= pluralize(cart_item.errors.count, "error") %> prohibited this cart_item from being saved:</h2>
+
+                <ul>
+                  <% @transaction_order.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+            <%= form.hidden_field :user_id, :value => current_user.id %>
+            <%=form.hidden_field :order_status,:value => "未付款" %>
+            <%=form.hidden_field :deal_sum, :value => sum_price %>
+            <div>
+              <%@cart_items.each do |item| %>
+              <%end %>
+              当前总价:<%=sum_price %>
+            </div>
+            <div class="field">
+              <%= form.label :收货地址 %>
+              <%= form.text_field :delivery_address, {placeholder:"address", title:"请填写收货地址",required: true,class:"form-control"} %>
+            </div>
+            <div class="field">
+              <%= form.label :姓名 %>
+              <%= form.text_field :delivery_name, {placeholder:"name", title:"请填写姓名",required: true ,class:"form-control"}%>
+            </div>
+            <div class="field">
+              <%= form.label :手机号 %>
+              <%= form.text_field :delivery_phone,{placeholder:"phone number", title:"请填写正确的手机号",
+                                                     pattern:"^1[3456789]\\d{9}$",class:"form-control"}%>
+            </div>
+            <div class="field">
+              <%= form.label :邮编 %>
+              <%= form.text_field :delivery_postcode, {placeholder:"postcode", title:"请填写正确的邮编",
+                                                      pattern:"^[1-9]\\d{5}$",class:"form-control"} %>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" form="order-form">
+              提交订单
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+
+
+

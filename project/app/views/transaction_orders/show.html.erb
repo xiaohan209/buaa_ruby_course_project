@@ -1,0 +1,84 @@
+<p id="notice"><%= notice %></p>
+<% all_items = TransactionItem.find_by_sql(["SELECT * FROM transaction_items WHERE transaction_order_id = ?",@transaction_order.id]) %>
+
+
+
+
+<div id="accordion">
+  <% sum_price = 0 %>
+  <% sum_count = 0 %>
+
+  <table class="table table-hover table-responsive">
+    <caption><h1>订单编号:<%=@transaction_order.id %></h1></caption>
+    <thead>
+    <tr>
+      <th>商品名称</th>
+      <th>图片</th>
+      <th>商品说明</th>
+      <th>商品概况</th>
+      <th>单价</th>
+      <th>数量</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% all_items.each do |item| %>
+
+        <% product = Product.find(item.product_id) %>
+        <tr>
+          <td>
+            <%= product.product_name %>
+          </td>
+          <td>
+            <a href= <%= product_path(product) %>>
+              <img class="cart_item_img_show" alt="Card image" src="/<%= product.image_directory %>">
+            </a>
+          </td>
+          <td><%= product.description %></td>
+          <td>
+            <div class="row">
+              <div id="designs">
+                <%= render :partial => product.design %>
+              </div>
+            </div>
+            <div class="row">
+              <div id="colors">
+                <%= render :partial => product.color %>
+              </div>
+            </div>
+            <div class="row">
+              <div id="sizes">
+                <%= render :partial => product.size %>
+              </div>
+            </div>
+
+            <div class="row">
+              <div id="product_types">
+                <%= render :partial => product.product_type %>
+              </div>
+            </div>
+          </td>
+          <td>￥<%= item.price %></td>
+          <td>
+            <div class="row">
+                <%= item.quantity %>
+            </div>
+          </td>
+        </tr>
+      <% count = item.quantity.nil? ? 0 : item.quantity %>
+      <% sum_price += count * product.retail_price %>
+      <% sum_count += count %>
+    <% end %>
+    </tbody>
+  </table>
+  <div align="right" class="row-sm-12 row-md-6 row-lg-4">
+    <p>
+      订单总价:<%= sum_price %><img src="/assets/money.png" width="32px">
+      订单内商品总数:<span><%=sum_count %></span>
+    </p>
+  </div>
+  <div align="right">
+    <button class="btn btn-info">
+      <%= link_to '返回到订单总览', transaction_orders_path %>
+    </button>
+  </div>
+</div>

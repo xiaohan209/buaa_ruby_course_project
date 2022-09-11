@@ -1,0 +1,22 @@
+<%= form_with(model: design, local: true) do |form| %>
+  <% if design.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(design.errors.count, "error") %> prohibited this design from being saved:</h2>
+
+      <ul>
+      <% design.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :"设计名称" %>
+    <%= form.text_field :design_name,:class => "form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "创建/修改设计" %>
+  </div>
+<% end %>

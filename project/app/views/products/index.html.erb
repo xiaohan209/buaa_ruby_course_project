@@ -1,0 +1,147 @@
+<p id="notice"><%= notice %></p>
+
+<h1 align="center">所有商品</h1>
+
+<% if current_user %>
+  <% @favorite_of_user = Favorite.find_by_sql(["SELECT product_id FROM favorites WHERE user_id = ?", current_user.id]) %>
+<% end %>
+<div id="product-container" class="clearfix">
+  <% @products.each do |product| %>
+    <div class="flow-box-item">
+      <div class="thumbnail">
+        <img src="<%= product.image_directory %>" alt="<%= product.product_name %>" class="product-preview-img">
+        <div class="caption">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+              <h2 class="card-title"><%= product.product_name %></h2>
+              <h4 class="card-text"><%= product.description %></h4>
+            </div>
+          </div>
+          <div class="product_price">￥:<%= product.retail_price%></div>
+          <% if current_user %>
+            <% unless current_user.user_role > 0 %>
+              <div class="col-lg-8 col-sm-5">
+                <% isFavorite = false %>
+                <% @favorite_of_user.each do |fav_user| %>
+                  <% if fav_user.product_id == product.id %>
+                    <% isFavorite = true %>
+                  <% end %>
+                <% end %>
+                <% @favorite = Favorite.new %>
+                <%= form_with(model: @favorite, local: true, id: "favorite-form-#{product.id}") do |form| %>
+                  <%= form.hidden_field :user_id, :value => current_user.id %>
+                  <%= form.hidden_field :product_id, :value => product.id %>
+                  <button type="submit" class="btn btn-primary" form="favorite-form-<%= product.id %>">
+                    <div id="mir" class="right clearfloat fr">
+                      <% if isFavorite %>
+                        <i id="favorite-icon" class="glyphicon glyphicon-star">收藏</i>
+                      <% else %>
+                        <i id="favorite-icon" class="glyphicon glyphicon-star-empty">收藏</i>
+                      <% end %>
+                    </div>
+                  </button>
+                <% end %>
+              </div>
+            <% end %>
+          <% end %>
+
+
+
+
+          <div class = "col-lg-8 col-sm-5 product_favorite_count">
+            收藏数量:<%= product.favorites %>
+          </div>
+          <div class = "col-lg-8 col-sm-5 product_sale_count">
+            销量:<%= product.sales %>
+          </div>
+
+          <% if current_user %>
+            <% unless current_user.user_role > 0 %>
+              <button type="button" class="btn btn-primary btn-lg add-to-cart-btn" data-toggle="modal" data-target="#myModal" data-product="<%= product.id %>">
+                加入购物车
+              </button>
+            <% end %>
+          <% end %>
+
+          <div class="detail-block text-right">
+            <a class="btn btn-info btn-in-preview-card" href= <%= product_path(product) %>>商品详情</a>
+          </div>
+
+
+
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+
+
+
+
+
+
+
+<!--cart_item-->
+<% if current_user && current_user.user_role == 0 %>
+  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <% @cart_item = CartItem.new %>
+      <%= form_with(model: @cart_item, local: true, id: "cart-item-form") do |form| %>
+        <% if @cart_item.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(cart_item.errors.count, "error") %> prohibited this cart_item from being saved:</h2>
+
+            <ul>
+              <% @cart_item.errors.full_messages.each do |message| %>
+                <li><%= message %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <h4 class="modal-title" id="myModalLabel">加入购物车</h4>
+          </div>
+          <div class="modal-body">
+            <%= form.hidden_field :user_id, :value => current_user.id %>
+            <%= form.hidden_field :product_id, :id => "pid-input" %>
+            <div class="field">
+              <%= form.label :数量 %>
+              <%= form.number_field :quantity, min: 1, :value => 1 ,placeholder:1,:class => "form-control"%>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+            <button type="submit" class="btn btn-primary" form="cart-item-form">
+              确认
+            </button>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
+
+<script>
+    $(function () {
+        let $container = $('#product-container')
+        $container.imagesLoaded(
+            function () {
+                $container.masonry({
+                    itemSelector: '.flow-box-item',
+                    gutterWidth: 10,
+                    isFitWidth: true,
+                });
+            }
+        )
+    })
+    $(function () {
+        $(".add-to-cart-btn").click(function(){
+            $("#pid-input").val($(this).data('product'))
+        })
+    })
+</script>

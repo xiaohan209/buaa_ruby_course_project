@@ -1,0 +1,27 @@
+# Ignore the idea project directory
+/project/.idea
+/.idea
+# Ignore the default SQLite database.
+/project/db/*.sqlite3
+/project/db/*.sqlite3-journal
+
+# Ignore all logfiles and tempfiles.
+/project/log/*
+/project/tmp/*
+!/project/log/.keep
+!/project/tmp/.keep
+
+# Ignore uploaded files in development
+/project/storage/*
+!/project/storage/.keep
+
+/project/node_modules
+/project/yarn-error.log
+
+/project/public/assets
+/project/.byebug_history
+
+# Ignore master key for decrypting credentials and more.
+/project/config/master.key
+
+

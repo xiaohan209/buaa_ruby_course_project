@@ -1,0 +1,64 @@
+<%= form_with(model: product, local: true) do |form| %>
+  <% if product.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(product.errors.count, "error") %> prohibited this product from being saved:</h2>
+
+      <ul>
+      <% product.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :商品名称 %>
+    <%= form.text_field :product_name,:class => "form-control" ,:placeholder => "product name"%>
+  </div>
+
+  <div class = "field">
+    <%= form.label :设计种类 %>
+    <%= form.collection_select(:design_id, Design.all, :id, :design_name, {},class: 'form-control' ) %>
+  </div>
+
+  <div class="field">
+    <%= form.label :商品种类 %>
+    <%= form.collection_select(:product_type_id, ProductType.all, :id, :product_type_name,{},class:"form-control")%>
+  </div>
+
+  <div class="field">
+    <%= form.label :颜色种类 %>
+    <%= form.collection_select(:color_id, Color.all, :id, :rgb_with_description,{},class: 'form-control')%>
+  </div>
+
+
+  <div class="field">
+    <%= form.label :尺寸种类 %>
+    <%= form.collection_select(:size_id, Size.all, :id, :size_with_description,{},class: 'form-control')%>
+  </div>
+
+  <div class="field">
+    <%= form.label :单价 %>
+    <%= form.text_field :retail_price, {placeholder:"请填写小于1e^9的最多两位小数的正数", title:"不符合要求，请填写小于1e^9的最多两位小数的正数",
+                                        pattern:"^\\d{1,8}(.\\d{1,2})?$",class:"form-control"} %>
+  </div>
+
+  <div class="field">
+    <%= form.label :商品简介 %>
+    <%= form.text_field :description,class:"form-control",:placeholder=>"description" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :图片 %>
+    <%= form.file_field :image_file,class:"form-control" %>
+  </div>
+
+  <div class="field">
+    <%= form.label :适用性别 %>
+    <%= form.select "gender", { "性别不限" => 0,"男" => 1, "女" => 2},{},class:"form-control" %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "新增/修改商品", :class => "btn btn-default"%>
+  </div>
+<% end %>

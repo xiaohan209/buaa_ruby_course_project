@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Sales:</strong>
+  <%= @design.sales %>
+</p>
+
+<p>
+  <strong>Design name:</strong>
+  <%= @design.design_name %>
+</p>
+
+<%= link_to 'Edit', edit_design_path(@design) %> |
+<%= link_to 'Back', designs_path %>

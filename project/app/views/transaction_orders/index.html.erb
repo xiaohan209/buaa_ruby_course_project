@@ -1,0 +1,78 @@
+<p id="notice"><%= notice %></p>
+
+
+<% if current_user %>
+  <% if current_user.user_role > 0 %>
+    <% @transaction_orders %>
+  <% else %>
+    <% @transaction_orders = TransactionOrder.find_by_sql(["SELECT * FROM transaction_orders WHERE user_id = ?", current_user.id]) %>
+  <% end %>
+<% end %>
+<table class="table table-hover table-responsive">
+  <caption><h1>订单</h1></caption>
+  <thead>
+  <tr>
+    <th>订单号</th>
+    <% if current_user %>
+      <% if current_user.user_role > 0 %>
+        <th>User</th>
+      <% end %>
+    <% end %>
+    <th>收货地址</th>
+    <th>姓名</th>
+    <th>手机号</th>
+    <th>邮编</th>
+    <th>总价</th>
+    <th>创建时间</th>
+    <th>当前状态</th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @transaction_orders.each do |transaction_order| %>
+    <tr>
+      <td><%= transaction_order.id %></td>
+      <% if current_user %>
+        <% if current_user.user_role > 0 %>
+          <% order_user = User.find(transaction_order.user_id) %>
+          <th><%= order_user.id %>(
+            <% order_user.email %>)
+          </th>
+        <% end %>
+      <% end %>
+      <td><%= transaction_order.delivery_address %></td>
+      <td><%= transaction_order.delivery_name %></td>
+      <td><%= transaction_order.delivery_phone %></td>
+      <td><%= transaction_order.delivery_postcode %></td>
+      <td>￥<%= transaction_order.deal_sum %></td>
+      <td><%= transaction_order.created_at %>&nbsp(<%= time_ago_in_words(transaction_order.created_at) %>前)</td>
+      <% if current_user %>
+        <% if current_user.user_role > 0 %>
+          <% if transaction_order.order_status == "未付款" %>
+            <td>等待用户付款</td>
+          <% elsif transaction_order.order_status == "未发货" %>
+            <td><%= button_to "去发货",{:action => 'transfer_order_status_deliver', :id => transaction_order.id},{class:"btn btn-success"} %></td>
+          <% elsif transaction_order.order_status == "未收货" %>
+            <td>等待用户收货</td>
+          <% elsif transaction_order.order_status == "已收货" %>
+            <td>已收货</td>
+          <% end %>
+        <% else %>
+          <% if transaction_order.order_status == "未付款" %>
+            <td><%= button_to "假装来付款",{:action => 'transfer_order_status_pay',:id => transaction_order.id},{class: 'btn btn-success'} %></td>
+          <% elsif transaction_order.order_status == "未发货" %>
+            <td>等待发货</td>
+          <% elsif transaction_order.order_status == "未收货" %>
+            <td><%= button_to "确认收货",{:action => 'transfer_order_status_get', :id => transaction_order.id},{class: "btn btn-success",} %></td>
+          <% elsif transaction_order.order_status == "已收货" %>
+            <td>已收货</td>
+          <% end %>
+        <% end %>
+      <% end %>
+      <td>
+        <a href="<%= transaction_order_url(transaction_order) %>"> 查看 </a>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

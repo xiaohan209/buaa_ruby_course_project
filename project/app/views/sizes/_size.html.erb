@@ -1,0 +1,23 @@
+<div id="size_<%= size.id %>">
+
+    <%# if user_signed_in? %>
+    <%# if comment.user_id == current_user.id %>
+    <%#= link_to '修改', edit_blog_comment_path(@blog,comment) %>
+    <%#= link_to '删除', comment, method: :delete, data: confirm: 'Are you sure?' } %>
+    <%# else %>
+    <!--        您不是评论作者无权修改或删除-->
+    <%# end %>
+    <%# else %>
+    <!--      您未登录无权修改或删除-->
+    <%# end %>
+
+  <div class="row">
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+      <strong>尺寸大小&nbsp&nbsp</strong>
+      <%= size.size_name %>
+    </div>
+    <div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+      尺寸说明：<%= size.description %>
+    </div>
+  </div>
+</div>

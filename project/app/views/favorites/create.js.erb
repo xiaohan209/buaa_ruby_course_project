@@ -1,0 +1,21 @@
+<% if @favorite.errors.any? %>
+  $('div.field').attr('class',"field_with_errors");
+
+  var div_begin = '<div id="error_explanation">'
+  var ul_begin = '<ul>'
+  var h2_whole = '<h2><%= pluralize(@comment.errors.count, "error") %> prohibited this blog from being saved:</h2>'
+  var ul_end = '</ul>'
+  var div_end = '</div>'
+  a = div_begin + h2_whole + ul_begin
+  <% @comment.errors.full_messages.each do |message| %>
+    a = a+ '<li><%= message %></li>'
+  <% end %>
+  a = a+ul_end+div_end
+  $('#notice').after(a)
+<% else %>
+  $('div.field_with_errors').attr('class',"field");
+  $('#error_explanation').remove();
+  $('#comments').append('<%= escape_javascript(render @comment) %>');
+  $('#comment_<%= @comment.id %>').effect('highlight', 'slow');
+  $('#new_comment')[0].reset();
+<% end %>

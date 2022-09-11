@@ -1,0 +1,27 @@
+<%= form_with(model: size, local: true) do |form| %>
+  <% if size.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(size.errors.count, "error") %> prohibited this size from being saved:</h2>
+
+      <ul>
+      <% size.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field form-group">
+    <%= form.label :尺寸类别名称 %>
+    <%= form.text_field :size_name ,:class => "form-control"%>
+  </div>
+
+  <div class="field form-group">
+    <%= form.label :描述 %>
+    <%= form.text_field :description ,:class => "form-control"%>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "修改/新增尺寸类别",:class => "btn btn-default"%>
+  </div>
+<% end %>
